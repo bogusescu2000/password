@@ -1,0 +1,9 @@
+{
+    "passwordGenerator": "Password Generator",
+    "characterLength": "Character length: ",
+    "generate": "Generate",
+    "uppercase": "Include Uppercase Letters",
+    "lowercase": "Include Lowercase Letters",
+    "numbers": "Include Numbers",
+    "symbols": "Include Symbols"
+}
