@@ -1,29 +1,32 @@
-import Typography from "@mui/material/Typography";
 import React, { useState, useContext } from "react";
-import Box from "@mui/material/Box";
+import { useTheme } from "@mui/material/styles";
+import { Slider, Checkbox, FormControlLabel } from "@material-ui/core";
+import { Button, Box, Typography } from "@mui/material";
+import { ArrowForward as ArrowForwardIcon } from "@mui/icons-material";
 import { ClipBoardButton } from "./ClipBoardButton";
-import Slider from "@material-ui/core/Slider";
-import Checkbox from "@material-ui/core/Checkbox";
-import { FormControlLabel } from "@material-ui/core";
-import { Button, IconButton } from "@mui/material";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { IconFlagFR, IconFlagUS } from "material-ui-flags";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import LightModeIcon from "@mui/icons-material/LightMode";
-import { generatePassword } from "./../utils/generatePassword";
 import { LanguageContext } from "../contexts/LanguageContext";
 import { ColorModeContext } from "../contexts/ColorModeContext";
-import { useTheme } from "@mui/material/styles";
+import { generatePassword } from "./../utils/generatePassword";
+import { ThemeSelector } from "./ThemeSelector";
+import { LanguageSelector } from "./LanguageSelector";
+import { CheckBoxSelector } from "./CheckBoxSelector";
 
-interface optionTextType {
-  type: "upperCase" | "lowerCase" | "numbers" | "symbols";
+export interface OptionsState {
+  upperCase: boolean;
+  lowerCase: boolean;
+  numbers: boolean;
+  symbols: boolean;
+}
+
+export interface OptionTextType {
+  type: keyof OptionsState;
   title: string;
 }
 
 export const Password: React.FC = () => {
   const [password, setPassword] = useState<string>();
   const [passwordLength, setPasswordLength] = useState<number>(5);
-  const [options, setOptions] = useState({
+  const [options, setOptions] = useState<OptionsState>({
     upperCase: true,
     lowerCase: true,
     numbers: true,
@@ -34,7 +37,7 @@ export const Password: React.FC = () => {
   const { toggleMode } = useContext(ColorModeContext);
   const theme = useTheme();
 
-  const optionText: optionTextType[] = [
+  const optionText: OptionTextType[] = [
     { type: "upperCase", title: translate("uppercase") },
     { type: "lowerCase", title: translate("lowercase") },
     { type: "numbers", title: translate("numbers") },
@@ -50,82 +53,51 @@ export const Password: React.FC = () => {
 
   return (
     <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        backgroundColor: "background.main",
-      }}
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      height="100vh"
+      bgcolor="background.main"
     >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          flexDirection: " column",
-        }}
-      >
+      <Box display="flex" alignItems="center" flexDirection="column">
         <Box
-          sx={{
-            backgroundColor: "background.default",
-            padding: "12px 20px",
-            display: "flex",
-            justifyContent: "space-between",
-            width: "400px",
-          }}
+          display="flex"
+          justifyContent="space-between"
+          width="400px"
+          padding=" 12px 20px"
+          bgcolor="background.default"
         >
-          <Box>
-            <IconButton onClick={() => setLang("fr")}>
-              <IconFlagFR />
-            </IconButton>
-            <IconButton onClick={() => setLang("en")}>
-              <IconFlagUS />
-            </IconButton>
-          </Box>
-          <Box>
-            <IconButton onClick={toggleMode}>
-              {theme.palette.mode === "light" ? (
-                <DarkModeIcon sx={{ color: "#5cf06e" }} />
-              ) : (
-                <LightModeIcon sx={{ color: "#5cf06e" }} />
-              )}
-            </IconButton>
-          </Box>
+          <LanguageSelector setLang={setLang} />
+          <ThemeSelector theme={theme} toggleMode={toggleMode} />
         </Box>
         <Typography
-          sx={{
-            color: "text.primary",
-            padding: "40px 0 10px 0",
-            fontSize: "20px",
-          }}
+          variant="body1"
+          margin="20px 0 10px 0"
+          sx={{ fontSize: "22px" }}
         >
           {translate("passwordGenerator")}
         </Typography>
         <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            backgroundColor: "background.default",
-            padding: "20px 20px",
-            width: "400px",
-          }}
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          width="400px"
+          padding=" 20px 20px"
+          bgcolor="background.default"
         >
-          <Typography sx={{ marginRight: "100px", color: "text.primary" }}>
+          <Typography variant="body1" marginRight="100px">
             {password}
           </Typography>
           <ClipBoardButton text={password || ""} />
         </Box>
         <Box
-          sx={{
-            width: "400px",
-            marginTop: "20px",
-            backgroundColor: "background.default",
-            padding: "20px 20px",
-          }}
+          width="400px"
+          padding=" 20px 20px"
+          marginTop="20px"
+          bgcolor="background.default"
         >
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography sx={{ color: "text.primary" }}>
+          <Box display="flex" justifyContent="space-between">
+            <Typography variant="body1">
               {translate("characterLength")}
             </Typography>
             <Typography sx={{ color: "#5cf06e", fontSize: "20px" }}>
@@ -133,39 +105,19 @@ export const Password: React.FC = () => {
             </Typography>
           </Box>
           <Slider
-            aria-label="assword Length"
+            aria-label="word Length"
             value={passwordLength}
             onChange={handleChange}
             style={{ color: "#5cf06e" }}
             max={20}
             defaultValue={5}
           />
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
-            {optionText.map((option) => (
-              <span key={option.type}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      style={{ color: "#5cf06e" }}
-                      checked={options[option.type]}
-                      onClick={() =>
-                        setOptions({
-                          ...options,
-                          [option.type]: !options[option.type],
-                        })
-                      }
-                    />
-                  }
-                  label={
-                    <Typography sx={{ color: "text.primary" }}>
-                      {option.title}
-                    </Typography>
-                  }
-                />
-              </span>
-            ))}
-          </Box>
-          <Box sx={{ marginTop: "30px" }}>
+          <CheckBoxSelector
+            optionText={optionText}
+            setOptions={setOptions}
+            options={options}
+          />
+          <Box marginTop="30px">
             <Button
               sx={{
                 border: "1px solid #5cf06e",
@@ -180,9 +132,7 @@ export const Password: React.FC = () => {
                 )
               }
             >
-              <Typography sx={{ color: "text.primary" }}>
-                {translate("generate")}
-              </Typography>
+              <Typography variant="body1">{translate("generate")}</Typography>
               <ArrowForwardIcon
                 sx={{ fontSize: "16px", paddingLeft: "10px" }}
               />

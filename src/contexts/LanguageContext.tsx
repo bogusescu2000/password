@@ -1,14 +1,14 @@
 import react, { createContext, useState } from "react";
-import { useTranslation } from "./../hooks/useTranslation";
+import { Language, useTranslation } from "./../hooks/useTranslation";
 
 interface LanguageContextType {
   translate: (key: string) => string;
-  setLang: (lang: string) => void;
+  setLang: (lang: Language) => void;
 }
 
 export const LanguageContext = createContext<LanguageContextType>({
   translate: (key: string) => key,
-  setLang: (lang: string) => {},
+  setLang: () => {},
 });
 
 export const LanguageContextProvider = ({

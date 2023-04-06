@@ -21,7 +21,7 @@ export const ColorModeContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [mode, setMode] = useState<Mode>(
-    (localStorage.getItem("mode") as Mode) || Mode.LIGHT
+    () => (localStorage.getItem("mode") as Mode) || Mode.LIGHT
   );
 
   useEffect(() => {

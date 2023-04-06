@@ -11,14 +11,7 @@ export const ClipBoardButton = ({ text }: ClipBoardButtonProps) => {
     navigator.clipboard.writeText(text);
   };
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "flex-end",
-        coor: "red",
-      }}
-    >
+    <Box display="flex" alignItems="center" justifyContent="flex-end">
       <IconButton style={{ padding: "0" }} onClick={copyTextToClipboard}>
         <ContentCopyRoundedIcon sx={{ color: "#5cf06e" }} />
       </IconButton>

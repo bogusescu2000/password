@@ -2,36 +2,34 @@ import { useCallback, useEffect, useState, useMemo } from "react";
 import frTranslations from "../translations/fr.json";
 import enTranslations from "../translations/en.json";
 
-enum Language {
-  FR = "fr",
-  EN = "en",
-}
+const languages = {
+  FR: "fr",
+  EN: "en",
+} as const;
+
+const STORAGE_KEY = "lang";
 
 interface TranslationFunction {
   (key: string): string;
 }
-interface Translations {
-  [key: string]: string;
-}
+
+export type Language = typeof languages[keyof typeof languages];
 
 export const useTranslation = () => {
-  const [translations, setTranslations] = useState<Translations>();
-  const [language, setLanguage] = useState<string>(
-    localStorage.getItem("lang") || Language.EN
+  const [translations, setTranslations] = useState<Record<string, string>>();
+  const [language, setLanguage] = useState<Language>(
+    () => (localStorage.getItem(STORAGE_KEY) as Language) || languages.FR
   );
 
-  const setLang = useCallback(
-    (lang: string): void => {
-      localStorage.setItem("lang", lang);
-      setLanguage(lang);
-    },
-    [setLanguage]
-  );
+  const setLang = useCallback((lang: Language): void => {
+    localStorage.setItem(STORAGE_KEY, lang);
+    setLanguage(lang);
+  }, []);
 
   useEffect(() => {
-    const loadedLaguage =
-      language === Language.FR ? frTranslations : enTranslations;
-    setTranslations(loadedLaguage);
+    const loadedLanguage =
+      language === languages.FR ? frTranslations : enTranslations;
+    setTranslations(loadedLanguage);
   }, [language]);
 
   const translate: TranslationFunction = useCallback(
