@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useTheme } from "@mui/material/styles";
-import { Slider, Checkbox, FormControlLabel } from "@material-ui/core";
+import { Slider } from "@material-ui/core";
 import { Button, Box, Typography } from "@mui/material";
 import { ArrowForward as ArrowForwardIcon } from "@mui/icons-material";
 import { ClipBoardButton } from "./ClipBoardButton";
@@ -36,7 +36,6 @@ export const Password: React.FC = () => {
   const { translate, setLang } = useContext(LanguageContext);
   const { toggleMode } = useContext(ColorModeContext);
   const theme = useTheme();
-
   const optionText: OptionTextType[] = [
     { type: "upperCase", title: translate("uppercase") },
     { type: "lowerCase", title: translate("lowercase") },

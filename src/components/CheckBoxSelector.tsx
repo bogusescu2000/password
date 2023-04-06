@@ -1,4 +1,4 @@
-import { Box, Checkbox, FormControlLabel, Typography } from "@material-ui/core";
+import { Box, Checkbox, FormControlLabel, Typography } from "@mui/material";
 import { OptionsState, OptionTextType } from "./Password";
 import { Dispatch, SetStateAction } from "react";
 
