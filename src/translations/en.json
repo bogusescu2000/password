@@ -5,5 +5,10 @@
     "uppercase": "Include Uppercase Letters",
     "lowercase": "Include Lowercase Letters",
     "numbers": "Include Numbers",
-    "symbols": "Include Symbols"
+    "symbols": "Include Symbols",
+    "strength": "Strength",
+    "weak": "Weak",
+    "fair": "Fair",
+    "good": "Good",
+    "strong": "Strong"
 }

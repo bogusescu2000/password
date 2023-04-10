@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useTheme } from "@mui/material/styles";
 import { Slider } from "@material-ui/core";
 import { Button, Box, Typography } from "@mui/material";
@@ -6,10 +6,11 @@ import { ArrowForward as ArrowForwardIcon } from "@mui/icons-material";
 import { ClipBoardButton } from "./ClipBoardButton";
 import { LanguageContext } from "../contexts/LanguageContext";
 import { ColorModeContext } from "../contexts/ColorModeContext";
-import { generatePassword } from "./../utils/generatePassword";
+import { generatePassword, measureStrength } from "./../utils/generatePassword";
 import { ThemeSelector } from "./ThemeSelector";
 import { LanguageSelector } from "./LanguageSelector";
 import { CheckBoxSelector } from "./CheckBoxSelector";
+import { PasswordStrength, StrengthType } from "./PasswordStrength";
 
 export interface OptionsState {
   upperCase: boolean;
@@ -25,14 +26,14 @@ export interface OptionTextType {
 
 export const Password: React.FC = () => {
   const [password, setPassword] = useState<string>();
-  const [passwordLength, setPasswordLength] = useState<number>(5);
+  const [passwordLength, setPasswordLength] = useState<number>(10);
   const [options, setOptions] = useState<OptionsState>({
     upperCase: true,
     lowerCase: true,
     numbers: true,
     symbols: false,
   });
-
+  const [strength, setStrength] = useState<StrengthType>(3);
   const { translate, setLang } = useContext(LanguageContext);
   const { toggleMode } = useContext(ColorModeContext);
   const theme = useTheme();
@@ -43,13 +44,16 @@ export const Password: React.FC = () => {
     { type: "symbols", title: translate("symbols") },
   ];
 
+  useEffect(() => {
+    setStrength(measureStrength(passwordLength, options));
+  }, [passwordLength, options]);
+
   const handleChange = (
     e: React.ChangeEvent<{}>,
     newValue: number | number[]
   ) => {
     setPasswordLength(newValue as number);
   };
-
   return (
     <Box
       display="flex"
@@ -116,6 +120,11 @@ export const Password: React.FC = () => {
             setOptions={setOptions}
             options={options}
           />
+          <PasswordStrength
+            strength={strength}
+            setCharacterLength={setPasswordLength}
+            setOptions={setOptions}
+          />
           <Box marginTop="30px">
             <Button
               sx={{
@@ -130,6 +139,7 @@ export const Password: React.FC = () => {
                   generatePassword(Math.floor(passwordLength), options)
                 )
               }
+              disabled={measureStrength(passwordLength, options) < 2}
             >
               <Typography variant="body1">{translate("generate")}</Typography>
               <ArrowForwardIcon

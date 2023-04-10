@@ -5,5 +5,10 @@
     "uppercase": "Inclure Lettres Majuscules",
     "lowercase": "Inclure Lettres Minuscules",
     "numbers": "Inclure le Nombre",
-    "symbols": "Inclure les Symboles"
+    "symbols": "Inclure les Symboles",
+    "strength": "Force",
+    "weak": "Faible",
+    "fair": "Moyen",
+    "good": "Bon",
+    "strong": "Fort"
 }

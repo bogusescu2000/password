@@ -1,3 +1,6 @@
+import { OptionsState } from "../components/Password";
+import { StrengthType } from "../components/PasswordStrength";
+
 const getUpper = (): string => {
   return String.fromCharCode(Math.floor(Math.random() * 26 + 65));
 };
@@ -64,4 +67,23 @@ export const generatePassword = (
   }
 
   return newPassword;
+};
+
+export const measureStrength = (
+  length: number,
+  { upperCase, lowerCase, numbers, symbols }: OptionsState
+): StrengthType => {
+  const numberOfChecked = [upperCase, lowerCase, numbers, symbols].filter(
+    Boolean
+  ).length;
+  if (length <= 0 || numberOfChecked === 0) return 0;
+  if (length <= 8) return 1;
+  if (length <= 12 && numberOfChecked <= 2) return 2;
+  if (
+    (length < 16 && numberOfChecked > 2) ||
+    (length >= 12 && numberOfChecked <= 3)
+  )
+    return 3;
+  if (length >= 16 && numberOfChecked > 3) return 4;
+  return 0;
 };

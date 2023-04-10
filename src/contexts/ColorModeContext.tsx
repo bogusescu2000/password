@@ -10,31 +10,35 @@ export const ColorModeContext = createContext<ColorModeContextType>({
   toggleMode: () => {},
 });
 
-enum Mode {
-  LIGHT = "light",
-  DARK = "dark",
-}
+const modes = {
+  LIGHT: "light",
+  DARK: "dark",
+} as const;
+
+const STORAGE_KEY = "mode";
+
+type ModeType = typeof modes[keyof typeof modes];
 
 export const ColorModeContextProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const [mode, setMode] = useState<Mode>(
-    () => (localStorage.getItem("mode") as Mode) || Mode.LIGHT
+  const [mode, setMode] = useState<ModeType>(
+    () => (localStorage.getItem("mode") as ModeType) || modes.LIGHT
   );
 
   useEffect(() => {
     const storageMode = localStorage.getItem("mode");
     if (storageMode) {
-      setMode(storageMode as Mode);
+      setMode(storageMode as ModeType);
     }
   }, [mode]);
 
   const toggleMode = (): void => {
-    const newMode = mode === Mode.LIGHT ? Mode.DARK : Mode.LIGHT;
-    localStorage.setItem("mode", newMode);
-    setMode(newMode as Mode);
+    const newMode = mode === modes.LIGHT ? modes.DARK : modes.LIGHT;
+    localStorage.setItem(STORAGE_KEY, newMode);
+    setMode(newMode as ModeType);
   };
 
   const theme = useMemo(() => createTheme(customTheme(mode)), [mode]);
